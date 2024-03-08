@@ -11,7 +11,16 @@ import (
 type Filter struct {
 	m, k   int32
 	hasher Hasher
-	client *RedisClient
+	client RedisClient
+}
+
+func NewFilter(m, k int32, client RedisClient, hasher Hasher) *Filter {
+	return &Filter{
+		m:      m,
+		k:      k,
+		hasher: hasher,
+		client: client,
+	}
 }
 
 func (f *Filter) Set(ctx context.Context, key, val string) error {
@@ -31,7 +40,6 @@ func (f *Filter) Set(ctx context.Context, key, val string) error {
 		return fmt.Errorf("resp: %d", resp)
 	}
 	return nil
-
 }
 
 func (f *Filter) Exist(ctx context.Context, key, val string) (bool, error) {
